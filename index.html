@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jornada da Fé - Esley Augusto</title>
+    <title>Jornada da Fé - Edição Universal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
@@ -59,6 +59,27 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(251, 191, 36, 0.2);
             box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+            /* Ajuste para rolagem interna */
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Scrollbar customizada para o card */
+        #game-content {
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold) transparent;
+            -webkit-overflow-scrolling: touch;
+            padding-right: 4px;
+        }
+
+        #game-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        #game-content::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
         }
 
         .glitch-active {
@@ -174,10 +195,10 @@
     </div>
 
     <!-- Card Principal -->
-    <div id="main-card" class="z-10 w-full max-w-xl glass p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[4rem] relative overflow-hidden transition-all duration-700 opacity-0 translate-y-6">
+    <div id="main-card" class="z-10 w-full max-w-xl glass p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[4rem] relative transition-all duration-700 opacity-0 translate-y-6">
         
         <!-- Header da UI -->
-        <div class="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-6 sm:mb-10 border-b border-white/10 pb-6 sm:pb-8 gap-6">
+        <div class="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-6 sm:mb-10 border-b border-white/10 pb-6 sm:pb-8 gap-6 shrink-0">
             <div class="flex flex-col items-center sm:items-start gap-4 w-full sm:w-auto">
                 <span class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Caminhante da Fé</span>
                 <div class="flex gap-2" id="inventory">
@@ -202,7 +223,7 @@
             </div>
         </div>
 
-        <div id="game-content" class="min-h-[350px] flex flex-col justify-center">
+        <div id="game-content" class="flex-grow flex flex-col">
             <!-- Injetado Dinamicamente -->
         </div>
 
@@ -372,7 +393,7 @@
         function renderStart() {
             const view = document.getElementById('game-content');
             view.innerHTML = `
-                <div class="text-center space-y-4 animate-in">
+                <div class="text-center space-y-4 animate-in py-4">
                     <div class="text-[80px] sm:text-[100px] drop-shadow-2xl mb-2">✨</div>
                     
                     <div class="challenge-badge">
@@ -386,7 +407,7 @@
                         <p class="text-slate-400 text-[10px] sm:text-xs tracking-[0.3em] uppercase">Prove seu conhecimento bíblico</p>
                     </div>
                     
-                    <div class="flex flex-col gap-4 mt-8">
+                    <div class="flex flex-col gap-4 mt-8 pb-4">
                         <button onclick="nextLevel()" class="btn-divine w-full py-5 rounded-3xl text-slate-900 font-black text-xl sm:text-2xl uppercase tracking-[0.2em]">
                             Entrar no Templo
                         </button>
@@ -410,14 +431,14 @@
             initTimeline();
 
             view.innerHTML = `
-                <div class="space-y-6 sm:space-y-8 animate-in">
+                <div class="space-y-6 sm:space-y-8 animate-in py-4">
                     <div class="text-center">
                         <div class="text-6xl sm:text-8xl mb-2">${level.visual}</div>
                         <h2 class="text-amber-500 font-ancient text-lg sm:text-xl uppercase tracking-widest">${level.title}</h2>
                     </div>
                     <p class="text-center text-xl sm:text-2xl font-bold leading-snug px-2 text-slate-100">${level.text}</p>
                     <div class="grid gap-3" id="options"></div>
-                    <div id="feedback" class="h-6 text-center text-[10px] font-black uppercase tracking-widest italic opacity-0 transition-opacity"></div>
+                    <div id="feedback" class="h-6 text-center text-[10px] font-black uppercase tracking-widest italic opacity-0 transition-opacity pb-4"></div>
                 </div>
             `;
 
@@ -429,6 +450,8 @@
                 b.onclick = () => handleChoice(o);
                 opts.appendChild(b);
             });
+            // Reset scroll position to top on each level
+            view.scrollTop = 0;
         }
 
         function handleChoice(opt) {
@@ -464,7 +487,7 @@
             document.getElementById('hp-bar').style.width = state.hp + '%';
             if(state.hp <= 0) {
                 document.getElementById('game-content').innerHTML = `
-                    <div class='text-center space-y-6 animate-in'>
+                    <div class='text-center space-y-6 animate-in py-10'>
                         <div class="text-7xl">🌑</div>
                         <h1 class='text-red-600 text-4xl font-ancient'>A FÉ FRAQUEJOU</h1>
                         <p class="text-slate-400 text-xs">Não desista, o caminho é estreito!</p>
@@ -476,16 +499,17 @@
         function renderBoss() {
             const view = document.getElementById('game-content');
             view.innerHTML = `
-                <div class="text-center space-y-8 animate-in">
+                <div class="text-center space-y-8 animate-in py-6">
                     <div class="text-8xl glitch-active">👹</div>
                     <h2 class="text-2xl font-ancient text-red-600 uppercase">Provação Final</h2>
                     <p class="text-slate-400 text-xs uppercase tracking-widest">Vença a dúvida com a esperança!</p>
                     <div class="w-full bg-red-900/20 h-2 rounded-full overflow-hidden">
                         <div id="boss-hp" class="bg-red-600 h-full transition-all duration-300 shadow-[0_0_10px_red]" style="width: 100%"></div>
                     </div>
-                    <button onclick="bossBattle()" class="btn-divine w-full py-5 rounded-2xl text-slate-900 font-black text-xl">BRANDIR A ESPERANÇA</button>
+                    <button onclick="bossBattle()" class="btn-divine w-full py-5 rounded-2xl text-slate-900 font-black text-xl mb-4">BRANDIR A ESPERANÇA</button>
                 </div>
             `;
+            view.scrollTop = 0;
         }
 
         let bHP = 100;
@@ -502,7 +526,7 @@
             const mistakesColor = state.mistakes === 0 ? 'text-green-400' : 'text-amber-500';
 
             view.innerHTML = `
-                <div class="text-center space-y-6 animate-in pb-10">
+                <div class="text-center space-y-6 animate-in pb-10 pt-4">
                     <div class="text-8xl victory-glow">👑</div>
                     
                     <div class="space-y-1">
@@ -539,13 +563,14 @@
                         </div>
                     </div>
 
-                    <div class="pt-2">
+                    <div class="pt-2 pb-6">
                         <button onclick="window.location.reload()" class="w-full py-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest">
                             Refazer a Jornada
                         </button>
                     </div>
                 </div>
             `;
+            view.scrollTop = 0;
             for(let i=0; i<50; i++) triggerParticles(window.innerWidth/2, window.innerHeight/2, '#fbbf24', 1);
         }
 
